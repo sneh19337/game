@@ -23,7 +23,7 @@ public class BallComponent extends ColorComponent {
     }
 
     public void up() {
-        if (entity.getY() >= FXGL.getAppHeight()/10) {
+        if (entity.getY() >= FXGL.getAppHeight()/2) {
 //            physics.setVelocityY(-BAT_SPEED);
             entity.translateY(-10);
             x++;

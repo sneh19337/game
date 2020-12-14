@@ -11,7 +11,7 @@ import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
 import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 
 public class ObstacleComponent extends ColorComponent {
-    double y=360;
+    double y=0;
     int x=0;
 
     protected PhysicsComponent physics;
@@ -24,6 +24,14 @@ public class ObstacleComponent extends ColorComponent {
     @Override
     public void setColor(Color c) {
         super.setColor(c);
+    }
+
+    public double getYcord() {
+        return y;
+    }
+
+    public void setYcord(double y) {
+        this.y = y;
     }
 
     void down(double x)
@@ -60,21 +68,21 @@ public void onUpdate(double tpf) {
 //    entity.setRotation(entity.getRotation()+5);
 //    getEntity().rotateToVector(new Point2D(100,100));
 //    getEntity().rotateToVector(new Point2D(1,1));
-    if(entity.getY()>=FXGL.getAppHeight()/2-100)
+//    System.out.println(y);
+    if(entity.getY()!=y)
     {
 //            physics.setLinearVelocity(0,0);
-        entity.translateY(-10);
+        entity.translateY(-600*tpf);
 //            y=false;
     }
-    if(x%3==0)
-    {
-        getEntity().rotateBy(2);
+//    if(x%3==0)
+//    {
+        getEntity().rotateBy(tpf*60);
+        System.out.println(tpf);
 
 
 
-        x=x%3;
-    }
-    x++;
+//
 
 
 }

@@ -49,10 +49,9 @@ public class Main extends GameApplication {
             @Override
             protected void onAction() {
                 playerball.up();
-                System.out.println(total_obstacles.size());
+//                System.out.println(total_obstacles.size());
                 for(int i=0;i<total_obstacles.size();i++)
                     total_obstacles.get(i).getEntity().translateY(20);
-
 
 
 
@@ -175,11 +174,13 @@ public class Main extends GameApplication {
         w+=100;
 
         Entity obs1 =spawn("obstacle", w, h);
+        obs1.getComponent(ObstacleComponent.class).setYcord(h);
         if(total_obstacles==null)
             total_obstacles=new ArrayList<>();
         total_obstacles.add(obs1.getComponent(ObstacleComponent.class));
 
         Entity obs2 =spawn("obstacle", w, h);
+        obs2.getComponent(ObstacleComponent.class).setYcord(h);
         Rectangle a=new Rectangle(0,0,10,200);
         a.setFill(Color.GOLD);
         obs2.getViewComponent().clearChildren();
@@ -190,6 +191,7 @@ public class Main extends GameApplication {
         total_obstacles.add(obs2.getComponent(ObstacleComponent.class));
 
         Entity obs3 =spawn("obstacle", w, h);
+        obs3.getComponent(ObstacleComponent.class).setYcord(h);
         a=new Rectangle(0,0,10,200);
         a.setFill(Color.BLUE);
         obs3.getViewComponent().clearChildren();
@@ -200,6 +202,7 @@ public class Main extends GameApplication {
         total_obstacles.add(obs3.getComponent(ObstacleComponent.class));
 
         Entity obs4 =spawn("obstacle", w, h);
+        obs4.getComponent(ObstacleComponent.class).setYcord(h);
         a=new Rectangle(0,0,10,200);
         a.setFill(Color.BLUEVIOLET);
         obs4.getViewComponent().clearChildren();
@@ -216,8 +219,8 @@ public class Main extends GameApplication {
 
         Entity ball = spawn("ball", getAppWidth() /2, getAppHeight()  - 30);
         playerball = ball.getComponent(BallComponent.class);
-        for(int i=0;i<3;i++)
-            createRectangle(getAppHeight()/2-500*i,getAppWidth() /2);
+        for(int i=0;i<4;i++)
+            createRectangle(getAppHeight()/2-1000*i,getAppWidth() /2);
 
     }
 
