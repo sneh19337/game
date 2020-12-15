@@ -1,234 +1,165 @@
 package sample;
 
-import com.almasb.fxgl.animation.Interpolators;
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.app.scene.FXGLMenu;
-import com.almasb.fxgl.app.scene.SceneFactory;
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.dsl.components.HealthIntComponent;
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.SpawnData;
-import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.physics.BoundingShape;
-import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.HitBox;
-import javafx.geometry.Point2D;
-import javafx.scene.input.KeyCode;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.canvas.*;
+import javafx.scene.web.*;
+import javafx.scene.layout.*;
+import javafx.scene.image.*;
+import java.io.*;
+import javafx.geometry.*;
+import javafx.scene.Group;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import static javafx.scene.paint.Color.GREENYELLOW;
 
-import static com.almasb.fxgl.dsl.FXGL.*;
+public class Main extends Application {
+Stage window;
+    Scene scene1,scene2, scene3, scene4,scene5;
+    // launch the application
+    public void start(Stage stage) {
+        window=stage;
+        try {
 
-public class Main extends GameApplication {
-    public static void main(String[] args) {
+            Button button1 = new Button("START NEW GAME");
+            button1.setStyle ("-fx-base: blue");
+            Button button2 = new Button("GAME BEGINS");
+            button2.setStyle ("-fx-base: green");
+            Button button3 = new Button("SAVE");
+            button3.setStyle ("-fx-base: orange");
+            Button button4 = new Button("BACK");
+            button4.setStyle ("-fx-base: brown");
+            Button button5 = new Button("END GAME");
+            button5.setStyle ("-fx-base: red");
+            Button button6 =new Button("PAUSE");
+            button6.setStyle ("-fx-base: green");
+            Button button7 = new Button("Game is paused");
+            button7.setStyle ("-fx-base: orange");
+            Button button8 = new Button("OKAY");
+            button8.setStyle ("-fx-base: light green");
+            Button button9=new Button("RELOAD PREVIOUS GAME");
+            button9.setStyle ("-fx-base: blue");
+            // set title for the stage
+            stage.setTitle("COLORSWITCH2.0");
+
+
+            // create a label
+            Button label = new Button("Name : ");
+            Label label1 = new Label("Welcome to colorswitch2.0 ");
+            label1.setStyle("-fx-border-color: white;");
+            label1.setTextFill(Color.web("#ff0000", 0.8));
+
+            // create a text field
+            TextField textfield = new TextField();
+
+            // set preferred column count
+            textfield.setPrefColumnCount(10);
+
+            // create a button
+            Button button = new Button("OK");
+            button.setOnAction(e -> window.setScene(scene2));
+            Button ex = new Button("Exit");
+            ex.setOnAction(e -> closeProgram());
+            button5.setOnAction(e -> closeProgram());
+            // add the label, text field and button
+            HBox hbox = new HBox(label, textfield, button, ex);
+
+            // set spacing
+            hbox.setSpacing(10);
+
+            // set alignment for the HBox
+            hbox.setAlignment(Pos.BOTTOM_CENTER);
+            GridPane grid = new GridPane();
+            grid.setAlignment(Pos.CENTER);
+            grid.setHgap(10);
+            VBox layout1 = new VBox(20);
+            layout1.getChildren().addAll(label1,button1,button9,button3,button5,button6);
+            FileInputStream input = new FileInputStream("C:\\Users\\SNEH SUMAN\\Desktop\\color_switch\\colorswitch.jpeg");
+            // create a image
+            Image image = new Image(input);
+
+
+            // create a background image
+            BackgroundImage backgroundimage = new BackgroundImage(image,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT,
+                    BackgroundSize.DEFAULT);
+
+            // create Background
+            Background background = new Background(backgroundimage);
+
+            // set background
+            hbox.setBackground(background);
+            layout1.setBackground(background);
+           // layout1.setStyle("-fx-background-color: #000000");
+            Menu menu = new Menu("Menu 1");
+
+            menu.setOnShowing(e -> { System.out.println("Showing Menu 1"); });
+            menu.setOnShown  (e -> { System.out.println("Shown Menu 1"); });
+            menu.setOnHiding (e -> { System.out.println("Hiding Menu 1"); });
+            menu.setOnHidden (e -> { System.out.println("Hidden Menu 1"); });
+            grid.setVgap(10);
+            scene2 = new Scene(layout1, 720, 720, GREENYELLOW);
+            // create a scene
+            grid.setPadding(new Insets(25, 25, 25, 25));
+
+            //Scene scene = new Scene(grid, 300, 275);
+            Scene scene1 = new Scene(grid, 300, 275);
+            Text scenetitle = new Text("HELLO PLAYER");
+            scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+            grid.add(scenetitle, 0, 0, 1, 1);
+            button8.setOnAction(e->window.setScene(scene2));
+            button2.setOnAction(e -> window.setScene(scene2));
+            button4.setOnAction(e -> window.setScene(scene2));
+            button7.setOnAction(e ->window.setScene(scene2));
+
+            Scene scene = new Scene(hbox, 720, 720);
+
+            layout1.setAlignment(Pos.BASELINE_CENTER);
+            //layout1.getChildren().addAll(label1, scenetitle);
+            // create a input stream
+            //input image is taken from https://apkpure.com/color-switch/com.colorswitch.switch2 credits to them
+
+
+
+
+            // set the scene 
+            stage.setScene(scene);
+
+            stage.show();
+            ////////////////////////
+
+
+
+            
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+        public void closeProgram ()
+        {
+            window.close();
+        }
+
+    // Main Method 
+    public static void main(String args[])
+    {
+
+        // launch the application 
         launch(args);
     }
-    private BallComponent playerball;
-    private List<ObstacleComponent> total_obstacles;
-    int count=0;
-
-    @Override
-    protected void initSettings(GameSettings settings) {
-        settings.setWidth(580);
-        settings.setHeight(720);
-        settings.setTitle("Color Switch 2");
-        settings.setMainMenuEnabled(true);
-
-    }
-
-    @Override
-    protected void initInput() {
-        getInput().addAction(new UserAction("Up") {
-            @Override
-            protected void onAction() {
-                playerball.up();
-//                System.out.println(total_obstacles.size());
-                for(int i=0;i<total_obstacles.size();i++)
-                    total_obstacles.get(i).getEntity().translateY(20);
-
-
-
-
-
-            }
-
-            @Override
-            protected void onActionEnd() {
-                playerball.stop();
-
-
-            }
-        }, KeyCode.W);
-
-    }
-
-    @Override
-    protected void initGameVars(Map<String, Object> vars) {
-
-
-    }
-
-    @Override
-    protected void initGame() {
-        getGameWorld().addEntityFactory(new GameEntityFactory());
-        getGameScene().setBackgroundColor(Color.rgb(5, 5, 5));
-        initGameObjects();
-
-    }
-
-    @Override
-    protected void onUpdate(double tpf) {
-//        var a=getGameWorld().getEntitiesByComponent(ObstacleComponent.class);
-//        int c=0;
-//        f.physics.setAngularVelocity(1);
-//        f.rotateBy(1);
-//
-//            if(f.getEntity().getY()>200)
-//                f.down(-1*420);
-//            else
-//                f.stop();
-        boolean a=false;
-//        for(int i=0;i<total_obstacles.size();i++)
-////            if(playerball.getEntity().getY()<=total_obstacles.get(i).getEntity().getY())
-//                total_obstacles.get(i).getEntity().translateY(10);
-//        if(a)
-//        {
-//            for(int i=0;i<total_obstacles.size();i++)
-//                total_obstacles.get(i).getEntity().translateY(10);
-//
-//        }
-//        for(int i=0;i<total_obstacles.size();i++)
-//            if(total_obstacles.get(i).getEntity().getY()>getAppHeight()/2-100)
-//                total_obstacles.get(i).getEntity().translateY(-5);
-
-//
-//
-//        var a=getGameWorld().getEntitiesByType(EntityType.OBSTACLE);
-//        for (var x:a)
-//        {
-////            x.rotateBy(1);
-//
-//        }
-
-    }
-
-    @Override
-    protected void initPhysics() {
-//        getPhysicsWorld().setGravity(0, 9);
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.BALL, EntityType.OBSTACLE) {
-
-
-            @Override
-            protected void onCollision(Entity a, Entity b) {
-//                System.out.println("helloasa");
-//                System.out.println(a.getComponents());
-//                System.out.println(b.getComponents());
-                try {
-
-                    if(a.getComponent(BallComponent.class).getColor().equals(b.getComponent(ObstacleComponent.class).getColor()))
-                    {
-                        System.out.println("1");
-//                        ObstacleComponent m=b.getComponent(ObstacleComponent.class);
-//                        System.out.println(m.idef);
-
-                    }
-                    else
-                    {
-                        System.out.println("collision"+count);
-
-                    }
-                    count++;
-                }
-                catch (Exception e)
-                {
-                    if(b.getComponent(BallComponent.class).getColor().equals(a.getComponent(ObstacleComponent.class).getColor()))
-                    {
-                        System.out.println("2");
-//                        ObstacleComponent m=b.getComponent(ObstacleComponent.class);
-//                        System.out.println(m.idef);
-
-                    }
-                    else
-                        System.out.println("collision"+count);
-                    count++;
-                }
-
-
-            }
-
-
-        });
-
-
-    }
-    void createRectangle(double h,double w)
-    {
-        h-=100;
-        w+=100;
-
-        Entity obs1 =spawn("obstacle", w, h);
-        obs1.getComponent(ObstacleComponent.class).setYcord(h);
-        if(total_obstacles==null)
-            total_obstacles=new ArrayList<>();
-        total_obstacles.add(obs1.getComponent(ObstacleComponent.class));
-
-        Entity obs2 =spawn("obstacle", w, h);
-        obs2.getComponent(ObstacleComponent.class).setYcord(h);
-        Rectangle a=new Rectangle(0,0,10,200);
-        a.setFill(Color.GOLD);
-        obs2.getViewComponent().clearChildren();
-        obs2.getViewComponent().addChild(a);
-        obs2.rotateBy(-90);
-        ObstacleComponent temp=obs2.getComponent(ObstacleComponent.class);
-        temp.setColor(Color.GOLD);
-        total_obstacles.add(obs2.getComponent(ObstacleComponent.class));
-
-        Entity obs3 =spawn("obstacle", w, h);
-        obs3.getComponent(ObstacleComponent.class).setYcord(h);
-        a=new Rectangle(0,0,10,200);
-        a.setFill(Color.BLUE);
-        obs3.getViewComponent().clearChildren();
-        obs3.getViewComponent().addChild(a);
-        obs3.setRotation(90);
-        temp=obs3.getComponent(ObstacleComponent.class);
-        temp.setColor(Color.BLUE);
-        total_obstacles.add(obs3.getComponent(ObstacleComponent.class));
-
-        Entity obs4 =spawn("obstacle", w, h);
-        obs4.getComponent(ObstacleComponent.class).setYcord(h);
-        a=new Rectangle(0,0,10,200);
-        a.setFill(Color.BLUEVIOLET);
-        obs4.getViewComponent().clearChildren();
-        obs4.getViewComponent().addChild(a);
-        obs4.setRotation(180);
-        temp=obs4.getComponent(ObstacleComponent.class);
-        temp.setColor(Color.BLUEVIOLET);
-        total_obstacles.add(obs4.getComponent(ObstacleComponent.class));
-    }
-
-
-    private void initGameObjects() {
-
-
-        Entity ball = spawn("ball", getAppWidth() /2, getAppHeight()  - 30);
-        playerball = ball.getComponent(BallComponent.class);
-        for(int i=0;i<4;i++)
-            createRectangle(getAppHeight()/2-1000*i,getAppWidth() /2);
-
-    }
-
-
-
-//    @Override
-//    protected void initUI() {
-//
-//
-//    }
-}
+} 
