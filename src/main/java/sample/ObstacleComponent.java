@@ -77,7 +77,7 @@ public void onUpdate(double tpf) {
     }
 //    if(x%3==0)
 //    {
-        getEntity().rotateBy(tpf*60);
+//        getEntity().rotateBy(tpf*60);
         System.out.println(tpf);
 
 

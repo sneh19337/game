@@ -82,6 +82,29 @@ public class GameEntityFactory implements EntityFactory {
         return asa;
 
     }
+//    @Spawns("obstacle")
+//    public  Entity newObstacle(SpawnData data)
+//    {
+//        Rectangle a=new Rectangle(0,0,10,200);
+////        a.setRotationAxis(new Point3D(10,0,0));
+//        a.setFill(Color.RED);
+//
+////        a.setRotationAxis(new Point3D(1,1,10));
+//
+//        Entity asa=entityBuilder().from(data)
+//                .type(EntityType.OBSTACLE)
+//                .viewWithBBox(a)
+//                .rotationOrigin(new Point2D(-100,100))
+//                .with(new CollidableComponent(true))
+//                .with(new ObstacleComponent())
+//                .build();
+//        asa.getComponent(ObstacleComponent.class).setColor(Color.RED);
+//
+////        asa.rotateToVector(new Point2D(5,50));
+//
+//        return asa;
+//
+//    }
 
 //    public Entity newObstacle(SpawnData data)
 //    {
