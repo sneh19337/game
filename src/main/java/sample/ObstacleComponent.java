@@ -69,16 +69,16 @@ public void onUpdate(double tpf) {
 //    getEntity().rotateToVector(new Point2D(100,100));
 //    getEntity().rotateToVector(new Point2D(1,1));
 //    System.out.println(y);
-    if(entity.getY()!=y)
+    if(entity.getY()>=y)
     {
 //            physics.setLinearVelocity(0,0);
-        entity.translateY(-600*tpf);
+        entity.translateY(-500*tpf);
 //            y=false;
     }
 //    if(x%3==0)
 //    {
-//        getEntity().rotateBy(tpf*60);
-        System.out.println(tpf);
+        getEntity().rotateBy(tpf*100);
+//        System.out.println(tpf);
 
 
 

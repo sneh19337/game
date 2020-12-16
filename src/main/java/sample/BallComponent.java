@@ -42,7 +42,7 @@ public class BallComponent extends ColorComponent {
     @Override
     public void onUpdate(double tpf) {
 
-        if(entity.getY()<=FXGL.getAppHeight()*9/10)
+        if(entity.getY()<=FXGL.getAppHeight()*95/100)
         {
 //            physics.setLinearVelocity(0,0);
             entity.translateY(3);

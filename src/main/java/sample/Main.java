@@ -34,10 +34,11 @@ public class Main extends GameApplication {
     private List<ObstacleComponent> total_obstacles;
     int count=0;
 
+
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(580);
-        settings.setHeight(720);
+        settings.setWidth(900);
+        settings.setHeight(900);
         settings.setTitle("Color Switch 2");
         settings.setMainMenuEnabled(true);
 
@@ -51,7 +52,7 @@ public class Main extends GameApplication {
                 playerball.up();
 //                System.out.println(total_obstacles.size());
                 for(int i=0;i<total_obstacles.size();i++)
-                    total_obstacles.get(i).getEntity().translateY(20);
+                    total_obstacles.get(i).getEntity().translateY(15);
 
 
 
@@ -117,6 +118,7 @@ public class Main extends GameApplication {
 //
 //        }
 
+
     }
 
     @Override
@@ -142,9 +144,9 @@ public class Main extends GameApplication {
                     else
                     {
                         System.out.println("collision"+count);
-
+                        count++;
                     }
-                    count++;
+
                 }
                 catch (Exception e)
                 {
@@ -170,9 +172,9 @@ public class Main extends GameApplication {
     }
     void createRectangle(double h,double w)
     {
-        h-=100;
-        w+=100;
-
+        h-=200;
+        w+=200;
+        double s=350;
         Entity obs1 =spawn("obstacle", w, h);
         obs1.getComponent(ObstacleComponent.class).setYcord(h);
         if(total_obstacles==null)
@@ -181,7 +183,7 @@ public class Main extends GameApplication {
 
         Entity obs2 =spawn("obstacle", w, h);
         obs2.getComponent(ObstacleComponent.class).setYcord(h);
-        Rectangle a=new Rectangle(0,0,10,200);
+        Rectangle a=new Rectangle(0,0,10,s);
         a.setFill(Color.GOLD);
         obs2.getViewComponent().clearChildren();
         obs2.getViewComponent().addChild(a);
@@ -192,7 +194,7 @@ public class Main extends GameApplication {
 
         Entity obs3 =spawn("obstacle", w, h);
         obs3.getComponent(ObstacleComponent.class).setYcord(h);
-        a=new Rectangle(0,0,10,200);
+        a=new Rectangle(0,0,10,s);
         a.setFill(Color.BLUE);
         obs3.getViewComponent().clearChildren();
         obs3.getViewComponent().addChild(a);
@@ -203,7 +205,7 @@ public class Main extends GameApplication {
 
         Entity obs4 =spawn("obstacle", w, h);
         obs4.getComponent(ObstacleComponent.class).setYcord(h);
-        a=new Rectangle(0,0,10,200);
+        a=new Rectangle(0,0,10,s);
         a.setFill(Color.BLUEVIOLET);
         obs4.getViewComponent().clearChildren();
         obs4.getViewComponent().addChild(a);
@@ -213,14 +215,77 @@ public class Main extends GameApplication {
         total_obstacles.add(obs4.getComponent(ObstacleComponent.class));
     }
 
+    void createTriangle(double h,double w)
+    {
+        h-=100;
+        w+=100;
+        double s=400;
+
+        Entity obs1 =spawn("triObstacle", w, h);
+        obs1.getComponent(ObstacleComponent.class).setYcord(h);
+//        obs1.rotateBy(30);
+        if(total_obstacles==null)
+            total_obstacles=new ArrayList<>();
+        total_obstacles.add(obs1.getComponent(ObstacleComponent.class));
+        ObstacleComponent temp;
+        Rectangle a = new Rectangle(0, 0, 10, s);
+        if(random(0,2)==0) {
+            Entity obs2 = spawn("triObstacle", w, h);
+            obs2.getComponent(ObstacleComponent.class).setYcord(h);
+
+            a.setFill(Color.GOLD);
+            obs2.getViewComponent().clearChildren();
+            obs2.getViewComponent().addChild(a);
+            obs2.rotateBy(120);
+//        obs2.translateX(-50);
+             temp = obs2.getComponent(ObstacleComponent.class);
+            temp.setColor(Color.GOLD);
+            total_obstacles.add(obs2.getComponent(ObstacleComponent.class));
+//
+        }
+        else
+        {
+            Entity obs3 =spawn("triObstacle", w, h);
+            obs3.getComponent(ObstacleComponent.class).setYcord(h);
+            a=new Rectangle(0,0,10,s);
+            a.setFill(Color.BLUE);
+            obs3.getViewComponent().clearChildren();
+            obs3.getViewComponent().addChild(a);
+            obs3.setRotation(120);
+            temp=obs3.getComponent(ObstacleComponent.class);
+            temp.setColor(Color.BLUE);
+            total_obstacles.add(obs3.getComponent(ObstacleComponent.class));
+
+        }
+
+
+//
+        Entity obs4 =spawn("triObstacle", w, h);
+        obs4.getComponent(ObstacleComponent.class).setYcord(h);
+        a=new Rectangle(0,0,10,s);
+        a.setFill(Color.BLUEVIOLET);
+        obs4.getViewComponent().clearChildren();
+        obs4.getViewComponent().addChild(a);
+        obs4.setRotation(240);
+//        obs4.translateX(180);
+
+        temp=obs4.getComponent(ObstacleComponent.class);
+        temp.setColor(Color.BLUEVIOLET);
+        total_obstacles.add(obs4.getComponent(ObstacleComponent.class));
+
+
+    }
 
     private void initGameObjects() {
 
 
         Entity ball = spawn("ball", getAppWidth() /2, getAppHeight()  - 30);
         playerball = ball.getComponent(BallComponent.class);
-        for(int i=0;i<4;i++)
-            createRectangle(getAppHeight()/2-1000*i,getAppWidth() /2);
+        for(int i=0;i<5;i++)
+            if(i%2==0)
+                createRectangle(getAppHeight()/2-1000*i,getAppWidth() /2);
+            else
+                createTriangle(getAppHeight()/2-1000*i,getAppWidth() /2);
 
     }
 
