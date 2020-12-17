@@ -1,5 +1,5 @@
 package sample;
 
 public enum EntityType {
-    BALL, OBSTACLE
+    BALL, OBSTACLE,ScoreBooster
 }

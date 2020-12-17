@@ -1,39 +1,17 @@
 package sample;
 
-import com.almasb.fxgl.animation.Interpolators;
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.dsl.components.*;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
-import com.almasb.fxgl.entity.components.TimeComponent;
-import com.almasb.fxgl.entity.components.TransformComponent;
-import com.almasb.fxgl.particle.ParticleComponent;
-import com.almasb.fxgl.particle.ParticleEmitters;
 import com.almasb.fxgl.physics.BoundingShape;
-import com.almasb.fxgl.physics.CircleShapeData;
 import com.almasb.fxgl.physics.HitBox;
-import com.almasb.fxgl.physics.PhysicsComponent;
-import com.almasb.fxgl.physics.box2d.collision.shapes.CircleShape;
-import com.almasb.fxgl.physics.box2d.common.Rotation;
-import com.almasb.fxgl.physics.box2d.dynamics.BodyDef;
-import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
-import com.almasb.fxgl.ui.ProgressBar;
-import javafx.geometry.BoundingBox;
+import com.almasb.fxgl.texture.Texture;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -50,8 +28,8 @@ public class GameEntityFactory implements EntityFactory {
         Entity x= entityBuilder()
                 .from(data)
                 .type(EntityType.BALL)
-                .view(new Circle(15,Color.BLUEVIOLET))
-                .bbox(new HitBox(BoundingShape.circle(15)))
+                .view(new Circle(12,Color.BLUEVIOLET))
+                .bbox(new HitBox(BoundingShape.circle(12)))
                 .with(new CollidableComponent(true))
                 .with(new BallComponent())
                 .build();
@@ -60,34 +38,14 @@ public class GameEntityFactory implements EntityFactory {
 
 
     }
-    @Spawns("triObstacle")
-    public  Entity newTriObstacle(SpawnData data)
-    {
-        double s=400;
-        Rectangle a=new Rectangle(0,0,10,s);
-//        a.setRotationAxis(new Point3D(10,0,0));
-        a.setFill(Color.RED);
 
-//        a.setRotationAxis(new Point3D(1,1,10));
-
-        Entity asa=entityBuilder().from(data)
-                .type(EntityType.OBSTACLE)
-                .viewWithBBox(a)
-                .rotationOrigin(new Point2D((double)(-s/2)/Math.pow(3,0.5),s/2))
-                .with(new CollidableComponent(true))
-                .with(new ObstacleComponent())
-                .build();
-        asa.getComponent(ObstacleComponent.class).setColor(Color.RED);
-
-//        asa.rotateToVector(new Point2D(5,50));
-
-        return asa;
-
-    }
     @Spawns("obstacle")
     public  Entity newObstacle(SpawnData data)
     {
-        double s=350;
+        double s=0;
+        s=data.get("side");
+        double rx=data.get("rx");
+        double ry=data.get("ry");
         Rectangle a=new Rectangle(0,0,10,s);
 //        a.setRotationAxis(new Point3D(10,0,0));
         a.setFill(Color.RED);
@@ -96,8 +54,9 @@ public class GameEntityFactory implements EntityFactory {
 
         Entity asa=entityBuilder().from(data)
                 .type(EntityType.OBSTACLE)
-                .viewWithBBox(a)
-                .rotationOrigin(new Point2D(-s/2,s/2))
+                .view(a)
+                .bbox(new HitBox(BoundingShape.box(1,s)))
+                .rotationOrigin(new Point2D(rx,ry))
                 .with(new CollidableComponent(true))
                 .with(new ObstacleComponent())
                 .build();
@@ -108,84 +67,21 @@ public class GameEntityFactory implements EntityFactory {
         return asa;
 
     }
+    @Spawns("ScoreBooster")
+    public Entity newScoreBooster(SpawnData data)
+    {
+        Texture f=texture("star.png");
+        f.setFitHeight(50);
+        f.setPreserveRatio(true);
 
-//    public Entity newObstacle(SpawnData data)
-//    {
-//        double pi=90*2*3.14/7;
-//        var arc=new Arc();
-//        arc.setStartAngle(0);
-//        arc.setCenterY(0);
-//        arc.setCenterX(0);
-//        arc.setRadiusX(90);
-//        arc.setRadiusY(90);
-//        arc.setLength(pi);
-//        arc.setType(ArcType.OPEN);
-//        arc.setStrokeWidth(10);
-////        arc.setFill(Color.RED);
-//        arc.setStroke(Color.RED);
-////        arc.set
-//
-//        var arc1=new Arc();
-//        arc1.setStartAngle(90);
-//        arc1.setCenterY(0);
-//        arc1.setCenterX(0);
-//        arc1.setRadiusX(90);
-//        arc1.setRadiusY(90);
-//        arc1.setLength(pi);
-//        arc1.setType(ArcType.OPEN);
-//        arc1.setStrokeWidth(10);
-//
-//        var arc2=new Arc();
-//        arc2.setStartAngle(180);
-//        arc2.setCenterY(0);
-//        arc2.setCenterX(0);
-//        arc2.setRadiusX(90);
-//        arc2.setRadiusY(90);
-//        arc2.setLength(pi);
-//        arc2.setType(ArcType.OPEN);
-//        arc2.setStrokeWidth(10);
-//        var arc3=new Arc();
-//        arc3.setStartAngle(270);
-//        arc3.setCenterY(0);
-//        arc3.setCenterX(0);
-//        arc3.setRadiusX(90);
-//        arc3.setRadiusY(90);
-//        arc3.setLength(pi);
-//        arc3.setType(ArcType.OPEN);
-//        arc3.setStrokeWidth(10);
-//
-////        arc.setFill(Color.RED);
-//        arc1.setStroke(Color.BLUE);
-//        arc2.setStroke(Color.BLUEVIOLET);
-//        arc3.setStroke(Color.YELLOW);
-////        PhysicsComponent physics=new PhysicsComponent();
-////        ProjectileComponent as=new ProjectileComponent();
-////        ProjectileComponent x=new ProjectileComponent(new Point2D(0,0),0);
-////        AutoRotationComponent as=new AutoRotationComponent();
-////        physics.setOnPhysicsInitialized(() -> physics.setLinearVelocity(0, 0));
-////        physics.setOnPhysicsInitialized(() -> physics.setAngularVelocity(100));
-////        physics.setFixtureDef(new FixtureDef().density(0.3f).restitution(1.0f));
-////        physics.setBodyType(BodyType.KINEMATIC);
-//
-//
-//
-//        return entityBuilder()
-//                .from(data)
-//                .type(EntityType.OBSTACLE)
-//
-//                .view(arc)
-//                .view(arc1)
-//                .view(arc2)
-//                .view(arc3)
-//                .bbox(new HitBox(BoundingShape.circle(90)))
-//                .with(new CollidableComponent(true))
-////                .with(physics)
-//                .with(new ObstacleComponent())
-//                .rotationOrigin(0,0)
-//                .build();
-//
-//
-//    }
+        Entity ScoreBooster = entityBuilder().from(data).type(EntityType.ScoreBooster)
+                .viewWithBBox(f).collidable().with(new ObstacleComponent())
+                .build();
+        return ScoreBooster;
+
+    }
+
+
 
 
 }
