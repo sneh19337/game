@@ -2,6 +2,25 @@ package sample;
 
 import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.MenuType;
+import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.input.UserAction;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import java.util.Map;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
@@ -39,6 +58,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -68,8 +89,16 @@ public class Main extends GameApplication {
         settings.setHeight(900);
         settings.setTitle("Color Switch 2");
         settings.setMainMenuEnabled(true);
-
+        settings.setSceneFactory(new SceneFactory()
+        {
+            @Override
+            public FXGLMenu newMainMenu()
+            {
+                return new MyMenu();
+            }
+        });
     }
+
 
     @Override
     protected void initInput() {
@@ -109,11 +138,13 @@ public class Main extends GameApplication {
 
             }
         }, KeyCode.W);
-        onKeyDown(KeyCode.F, () -> {
+
+        onKeyDown(KeyCode.U, () -> {
             play("hello.wav");
         });
 
     }
+
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
@@ -150,9 +181,15 @@ public class Main extends GameApplication {
         getGameScene().addUINode(life);
 
     }
+    private Entity player;
+
+
 
     @Override
     protected void initGame() {
+
+
+
         getGameWorld().addEntityFactory(new GameEntityFactory());
         getGameScene().setBackgroundColor(Color.rgb(5, 5, 5));
         initGameObjects();
@@ -595,6 +632,80 @@ public class Main extends GameApplication {
 
     }
 }
+class MyMenu extends FXGLMenu {
+    public MyMenu() {
+        super(MenuType.MAIN_MENU);
+        Colorbutton btnPlay =new Colorbutton("Play Game", this::fireNewGame);
+        Colorbutton btnQuit =new Colorbutton("Exit Game", this::fireExit);
+        Colorbutton btnSave =new Colorbutton("Save Game", this::fireSave);
+        Colorbutton btnReload=new Colorbutton("Reload Game",this::createContentLoad);
+        var box=new VBox(15,btnPlay,btnQuit,btnSave,btnReload);
+        box.setTranslateX(100);
+        box.setTranslateY(400);
+        getContentRoot().getChildren().addAll(box);
 
+    }
 
+    @NotNull
+    @Override
+    protected Button createActionButton(@NotNull StringBinding stringBinding, @NotNull Runnable runnable) {
+        return new Button();
+    }
+
+    @NotNull
+    @Override
+    protected Button createActionButton(@NotNull String s, @NotNull Runnable runnable) {
+        return new Button();
+    }
+
+    @NotNull
+    @Override
+    protected Node createBackground(double v, double v1) {
+
+        return FXGL.texture("colorswitch.png");
+    }
+
+    @NotNull
+    @Override
+    protected Node createProfileView(@NotNull String s) {
+        return new Text();
+    }
+
+    @NotNull
+    @Override
+    protected Node createTitleView(@NotNull String s) {
+        return new Text();
+    }
+
+    @NotNull
+    @Override
+    protected Node createVersionView(@NotNull String s) {
+        return new Text();
+    }
+}
+ class Colorbutton extends StackPane {
+
+     public Colorbutton(String name, Runnable action) {
+
+         var bg = new Rectangle(200, 40);
+         bg.setStroke(Color.WHITE);
+
+         var text = FXGL.getUIFactory().newText(name, Color.WHITE, 18);
+
+         bg.fillProperty().bind(
+                 Bindings.when(hoverProperty()).then(Color.WHITE).otherwise(Color.BLACK)
+         );
+
+         text.fillProperty().bind(
+                 Bindings.when(hoverProperty()).then(Color.BLACK).otherwise(Color.WHITE)
+         );
+
+         setOnMouseClicked(e -> action.run());
+
+         getChildren().addAll(bg, text);
+     }
+ }
+
+//The song is added just for fun and with no intention to copywright .It was downloaded from pagalworld.com
+//The color switch image is taken from google images
 
