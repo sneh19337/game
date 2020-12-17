@@ -16,6 +16,7 @@ import com.almasb.fxgl.physics.HitBox;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -41,13 +42,21 @@ import javafx.scene.text.Text;
 import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import static java.lang.System.exit;
 
 public class Main extends GameApplication {
     private BallComponent playerball;
     private List<ObstacleComponent> total_obstacles;
     private List<Boolean> visited;
     private int count = 0;
+    private int total_obstacles_no=0;
+    private int total_stars_no=0;
+    private int total_colour_changer_no=0;
+    private int total_life_giver_no=0;
+
     private List<ObstacleComponent> total_stars;
+    private List<ObstacleComponent> total_color_changers;
+    private List<ObstacleComponent> total_life_giver;
 
     public static void main(String[] args) {
         launch(args);
@@ -80,6 +89,14 @@ public class Main extends GameApplication {
                 for (int i = 0; i < total_stars.size(); i++) {
 
                     total_stars.get(i).getEntity().translateY(15);
+                }
+                for (int i = 0; i < total_color_changers.size(); i++) {
+
+                    total_color_changers.get(i).getEntity().translateY(15);
+                }
+                for (int i = 0; i < total_stars.size(); i++) {
+
+                    total_life_giver.get(i).getEntity().translateY(15);
                 }
 
 
@@ -145,39 +162,19 @@ public class Main extends GameApplication {
 
     @Override
     protected void onUpdate(double tpf) {
-//        var a=getGameWorld().getEntitiesByComponent(ObstacleComponent.class);
-//        int c=0;
-//        f.physics.setAngularVelocity(1);
-//        f.rotateBy(1);
-//
-//            if(f.getEntity().getY()>200)
-//                f.down(-1*420);
-//            else
-//                f.stop();
-        boolean a = false;
+    if(getGameState().getInt("life")<1)
+    {
+//        System.out.println("score "+getGameState().getInt("score"));
+//        exit(0);
 
-
-//        for(int i=0;i<total_obstacles.size();i++)
-////            if(playerball.getEntity().getY()<=total_obstacles.get(i).getEntity().getY())
-//                total_obstacles.get(i).getEntity().translateY(10);
-//        if(a)
-//        {
-//            for(int i=0;i<total_obstacles.size();i++)
-//                total_obstacles.get(i).getEntity().translateY(10);
-//
-//        }
-//        for(int i=0;i<total_obstacles.size();i++)
-//            if(total_obstacles.get(i).getEntity().getY()>getAppHeight()/2-100)
-//                total_obstacles.get(i).getEntity().translateY(-5);
-
-//
-//
-//        var a=getGameWorld().getEntitiesByType(EntityType.OBSTACLE);
-//        for (var x:a)
-//        {
-////            x.rotateBy(1);
-//
-//        }
+    }
+    if(visited!=null &&visited.size()>2&&visited.get(visited.size()-2)==true)
+    {
+        initObstacles();
+        initScoreBooster();
+        initLifeGiver();
+        initColorChanger();
+    }
 
 
     }
@@ -288,6 +285,76 @@ public class Main extends GameApplication {
 
             }
         });
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.BALL, EntityType.LifeGiver) {
+            @Override
+            protected void onCollisionBegin(Entity a, Entity b) {
+                if (a.getType() == EntityType.LifeGiver)
+                {
+                    total_life_giver.remove(a.getComponent(ObstacleComponent.class));
+
+                }
+
+                else
+                {
+                    total_life_giver.remove(b.getComponent(ObstacleComponent.class));
+
+                }
+
+            }
+
+            @Override
+            protected void onCollisionEnd(Entity a, Entity b) {
+                getGameState().increment("life", 1);
+                if (a.getType() == EntityType.LifeGiver)
+                {
+
+                    getGameWorld().removeEntity(a);
+                }
+
+                else
+                {
+
+                    getGameWorld().removeEntity(b);
+                }
+
+            }
+        });
+        //gold blue blueviolet red
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.BALL,EntityType.ColorChanger) {
+            @Override
+            protected void onCollisionBegin(Entity a, Entity b) {
+                b.removeFromWorld();
+                if(a.getType()!=EntityType.BALL) {
+                    Entity temp=b;
+                    b=a;
+                    a=temp;
+                }
+
+                    Color fin=a.getComponent(BallComponent.class).getColor();
+                    while (a.getComponent(BallComponent.class).getColor()==fin)
+                {
+                    switch (random(0,4))
+                    {
+                        case 0:fin=Color.GOLD;break;
+                        case 1:fin=Color.BLUE;break;
+                        case 2:fin=Color.BLUEVIOLET;break;
+                        case 3:fin=Color.RED;break;
+                    }
+
+                }
+                    a.getViewComponent().clearChildren();
+                    Circle c=new Circle(12,fin);
+                    a.getViewComponent().addChild(c);
+                    a.getComponent(BallComponent.class).setColor(fin);
+
+                    total_color_changers.remove(b.getComponent(ObstacleComponent.class));
+
+
+
+
+
+            }
+        });
 
 
     }
@@ -302,8 +369,7 @@ public class Main extends GameApplication {
         data.put("ry", s / 2);
         Entity obs1 = spawn("obstacle", data);
         obs1.getComponent(ObstacleComponent.class).setYcord(h);
-        if (total_obstacles == null)
-            total_obstacles = new ArrayList<>();
+
         total_obstacles.add(obs1.getComponent(ObstacleComponent.class));
 
         Entity obs2 = spawn("obstacle", data);
@@ -454,22 +520,44 @@ public class Main extends GameApplication {
 
     private void initScoreBooster() {
         if(total_stars==null)
-            total_stars=new ArrayList<>(5);
-        for (int i = 0; i < 5; i++) {
+            total_stars=new ArrayList<>(10);
+        for (int i = total_stars_no; i < total_stars_no+ 5; i++) {
             Entity a = spawn("ScoreBooster", getAppWidth() / 2 - 25, getAppHeight() / 2 + 100 - 500 - 1000 * i);
             a.getComponent(ObstacleComponent.class).setYcord(getAppHeight() / 2 + 100 - 500 - 1000 * i);
             total_stars.add(a.getComponent(ObstacleComponent.class));
         }
+        total_stars_no+=5;
 
     }
+    private void initColorChanger()
+    {
+        if(total_color_changers==null)
+            total_color_changers=new ArrayList<>(10);
+        for (int i = total_colour_changer_no; i < total_colour_changer_no+ 10; i++) {
+            Entity a = spawn("ColorChanger", getAppWidth() / 2 , getAppHeight() / 2  - 750 * i );
+            a.getComponent(ObstacleComponent.class).setYcord(getAppHeight() / 2 + - 750 * i);
+            total_color_changers.add(a.getComponent(ObstacleComponent.class));
+        }
+        total_colour_changer_no+=10;
 
-    private void initGameObjects() {
+    }
+    private void initLifeGiver()
+    {
+        if(total_life_giver==null)
+            total_life_giver=new ArrayList<>(10);
+        for (int i = total_life_giver_no; i < total_life_giver_no+ 5; i++) {
+            Entity a = spawn("LifeGiver", getAppWidth() / 2-25 , getAppHeight() / 2 -1000  - 2000 * i);
+            a.getComponent(ObstacleComponent.class).setYcord(getAppHeight() / 2 -1000 - 2000 * i);
+            total_life_giver.add(a.getComponent(ObstacleComponent.class));
+        }
+        total_life_giver_no+=5;
 
-
-        Entity ball = spawn("ball", getAppWidth() / 2, getAppHeight() - 30);
-
-        playerball = ball.getComponent(BallComponent.class);
-        for (int i = 0; i < 10; i++) {
+    }
+    private void initObstacles()
+    {
+        if (total_obstacles == null)
+            total_obstacles = new ArrayList<>(100);
+        for (int i = total_obstacles_no; i < total_obstacles_no + 20; i++) {
             int x = random(0, 3);
             switch (x) {
                 case 0:
@@ -484,13 +572,26 @@ public class Main extends GameApplication {
                     break;
             }
         }
-        initScoreBooster();
-
-
-        visited = new ArrayList<>(total_obstacles.size());
-
-        for (int i = 0; i < total_obstacles.size(); i++)
+        total_obstacles_no+=20;
+        if(visited==null)
+            visited = new ArrayList<>(total_obstacles.size());
+        for (int i = visited.size(); i < total_obstacles.size(); i++)
             visited.add(false);
+
+    }
+
+    private void initGameObjects() {
+
+        Entity ball = spawn("ball", getAppWidth() / 2, getAppHeight() - 30);
+        playerball = ball.getComponent(BallComponent.class);
+        initObstacles();
+        initScoreBooster();
+        initColorChanger();
+        initLifeGiver();
+
+
+
+
 
     }
 }
