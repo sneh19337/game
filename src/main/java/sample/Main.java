@@ -65,6 +65,45 @@ import java.util.Map;
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static java.lang.System.exit;
 
+class userBall
+{
+    Entity ball;
+    userBall()
+    {
+        ball=spawn("ball", getAppWidth() / 2, getAppHeight() - 30);
+    }
+
+    public Entity getBall() {
+        return ball;
+    }
+}
+class randomColor{
+    Color c1;
+    randomColor()
+    {
+        switch (random(0,4))
+        {
+            case 0: c1=Color.RED;break;
+            case 1: c1=Color.BLUE;break;
+            case 2: c1=Color.GOLD;break;
+            case 3: c1=Color.BLUEVIOLET;break;
+        }
+    }
+
+    public Color getColor() {
+        switch (random(0,4))
+        {
+            case 0: c1=Color.RED;break;
+            case 1: c1=Color.BLUE;break;
+            case 2: c1=Color.GOLD;break;
+            case 3: c1=Color.BLUEVIOLET;break;
+        }
+        return c1;
+    }
+}
+
+
+
 public class Main extends GameApplication {
     private BallComponent playerball;
     private List<ObstacleComponent> total_obstacles;
@@ -74,6 +113,7 @@ public class Main extends GameApplication {
     private int total_stars_no=0;
     private int total_colour_changer_no=0;
     private int total_life_giver_no=0;
+    private randomColor random= new randomColor();
 
     private List<ObstacleComponent> total_stars;
     private List<ObstacleComponent> total_color_changers;
@@ -195,14 +235,18 @@ public class Main extends GameApplication {
         initGameObjects();
 
 
+
     }
 
     @Override
     protected void onUpdate(double tpf) {
     if(getGameState().getInt("life")<1)
     {
-//        System.out.println("score "+getGameState().getInt("score"));
-//        exit(0);
+
+            showMessage("Game Over! score is "+getGameState().getInt("score"), () -> {exit(0);
+                });
+
+
 
     }
     if(visited!=null &&visited.size()>2&&visited.get(visited.size()-2)==true)
@@ -499,57 +543,43 @@ public class Main extends GameApplication {
         double s = 400;
         SpawnData data = new SpawnData(w, h);
         data.put("side", s);
-        data.put("rx", (-s / 2) / Math.pow(3, 0.5));
+        data.put("rx", (-s / 2) );
         data.put("ry", s / 2);
 
-        Entity obs1 = spawn("obstacle", data);
-        obs1.getComponent(ObstacleComponent.class).setYcord(h);
-//        obs1.rotateBy(30);
+        Color c1=random.getColor();
+        Color c2=random.getColor();
+
         if (total_obstacles == null)
             total_obstacles = new ArrayList<>();
-        total_obstacles.add(obs1.getComponent(ObstacleComponent.class));
+
         ObstacleComponent temp;
         Rectangle a = new Rectangle(0, 0, 10, s);
-        if (random(0, 2) == 0) {
-            Entity obs2 = spawn("obstacle", data);
-            obs2.getComponent(ObstacleComponent.class).setYcord(h);
 
-            a.setFill(Color.GOLD);
-            obs2.getViewComponent().clearChildren();
-            obs2.getViewComponent().addChild(a);
-            obs2.rotateBy(120);
-//        obs2.translateX(-50);
-            temp = obs2.getComponent(ObstacleComponent.class);
-            temp.setColor(Color.GOLD);
-            total_obstacles.add(obs2.getComponent(ObstacleComponent.class));
-//
-        } else {
             Entity obs3 = spawn("obstacle", data);
             obs3.getComponent(ObstacleComponent.class).setYcord(h);
             a = new Rectangle(0, 0, 10, s);
-            a.setFill(Color.BLUE);
+            a.setFill(c1);
             obs3.getViewComponent().clearChildren();
             obs3.getViewComponent().addChild(a);
-            obs3.setRotation(120);
+
             temp = obs3.getComponent(ObstacleComponent.class);
-            temp.setColor(Color.BLUE);
+            temp.setColor(c1);
             total_obstacles.add(obs3.getComponent(ObstacleComponent.class));
 
-        }
 
 
-//
+
         Entity obs4 = spawn("obstacle", data);
         obs4.getComponent(ObstacleComponent.class).setYcord(h);
         a = new Rectangle(0, 0, 10, s);
-        a.setFill(Color.BLUEVIOLET);
+        a.setFill(c2);
         obs4.getViewComponent().clearChildren();
         obs4.getViewComponent().addChild(a);
         obs4.setRotation(240);
-//        obs4.translateX(180);
+
 
         temp = obs4.getComponent(ObstacleComponent.class);
-        temp.setColor(Color.BLUEVIOLET);
+        temp.setColor(c2);
         total_obstacles.add(obs4.getComponent(ObstacleComponent.class));
 
 
@@ -559,7 +589,7 @@ public class Main extends GameApplication {
         if(total_stars==null)
             total_stars=new ArrayList<>(10);
         for (int i = total_stars_no; i < total_stars_no+ 5; i++) {
-            Entity a = spawn("ScoreBooster", getAppWidth() / 2 - 25, getAppHeight() / 2 + 100 - 500 - 1000 * i);
+            Entity a = spawn("ScoreBooster", getAppWidth() / 2 - 25, getAppHeight() / 2  - 500 - 2500 * i);
             a.getComponent(ObstacleComponent.class).setYcord(getAppHeight() / 2 + 100 - 500 - 1000 * i);
             total_stars.add(a.getComponent(ObstacleComponent.class));
         }
@@ -571,8 +601,8 @@ public class Main extends GameApplication {
         if(total_color_changers==null)
             total_color_changers=new ArrayList<>(10);
         for (int i = total_colour_changer_no; i < total_colour_changer_no+ 10; i++) {
-            Entity a = spawn("ColorChanger", getAppWidth() / 2 , getAppHeight() / 2  - 750 * i );
-            a.getComponent(ObstacleComponent.class).setYcord(getAppHeight() / 2 + - 750 * i);
+            Entity a = spawn("ColorChanger", getAppWidth() / 2 , getAppHeight() / 2 -500 - 3000 * i );
+            a.getComponent(ObstacleComponent.class).setYcord(getAppHeight() / 2 -500 - 3000 * i);
             total_color_changers.add(a.getComponent(ObstacleComponent.class));
         }
         total_colour_changer_no+=10;
@@ -598,14 +628,14 @@ public class Main extends GameApplication {
             int x = random(0, 3);
             switch (x) {
                 case 0:
-                    createRectangle(getAppHeight() / 2 - 700 * i, getAppWidth() / 2);
+                    createRectangle(getAppHeight() / 2 - 1500 * i, getAppWidth() / 2);
                     break;
                 case 1:
-                    createTriangle(getAppHeight() / 2 - 700 * i, getAppWidth() / 2);
+                    createTriangle(getAppHeight() / 2 - 1500 * i, getAppWidth() / 2);
                     break;
                 case 2:
-                    createFan(getAppHeight() / 2 - 700 * i, getAppWidth() / 2);
-                    createFan(getAppHeight() / 2 - 700 * i, 50);
+                    createFan(getAppHeight() / 2 - 1500 * i, getAppWidth() / 2);
+                    createFan(getAppHeight() / 2 - 1500 * i, 50);
                     break;
             }
         }
@@ -619,7 +649,7 @@ public class Main extends GameApplication {
 
     private void initGameObjects() {
 
-        Entity ball = spawn("ball", getAppWidth() / 2, getAppHeight() - 30);
+        Entity ball = new userBall().getBall();
         playerball = ball.getComponent(BallComponent.class);
         initObstacles();
         initScoreBooster();
